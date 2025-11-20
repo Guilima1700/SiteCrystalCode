@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     siteName: "CrystalCode",
     images: [
       {
-        url: "/preview.png",
+        url: "/preview.jpg",
         width: 1200,
         height: 630,
         alt: "CrystalCode Preview",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CrystalCode - Web Design Premium",
     description: "Transformamos sua visão em realidade digital.",
-    images: ["/preview.png"],
+    images: ["/preview.jpg"],
   },
 };
 
