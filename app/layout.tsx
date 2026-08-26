@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-// @ts-expect-error Next.js processes this stylesheet import at build time.
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
