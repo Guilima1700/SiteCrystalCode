@@ -29,6 +29,7 @@ import {
   Users,
   BarChart3,
   Lock,
+  ArrowUpRight,
 } from "lucide-react";
 import {
   siDocker,
@@ -42,6 +43,7 @@ import {
   siTailwindcss,
   siTypescript,
 } from "simple-icons";
+import { PROJETOS, type Projeto } from "./data/projetos";
 
 
 const SOLUCOES = [
@@ -249,6 +251,74 @@ function SolucaoCard({
   );
 }
 
+function ProjetoCard({ projeto, index }: { projeto: Projeto; index: number }) {
+  const reduce = useMotionSafe();
+  const [imagemFalhou, setImagemFalhou] = React.useState(false);
+  const temImagem = Boolean(projeto.imagem) && !imagemFalhou;
+  const temLink = Boolean(projeto.url);
+
+  return (
+    <motion.article
+      className="projeto-card"
+      initial={reduce ? { opacity: 1 } : { opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease: EASE, delay: (index % 3) * 0.08 }}
+      whileHover={reduce ? {} : { y: -6 }}
+    >
+      <div className="projeto-preview">
+        <div className="projeto-browser" aria-hidden="true">
+          <span className="dot dot-red" />
+          <span className="dot dot-yellow" />
+          <span className="dot dot-green" />
+          <span className="browser-url projeto-url">
+            {projeto.url ? projeto.url.replace(/^https?:\/\//, "").replace(/\/$/, "") : "em breve"}
+          </span>
+        </div>
+        <div className="projeto-shot">
+          {temImagem ? (
+            <img
+              src={projeto.imagem}
+              alt={`Prévia do site ${projeto.nome}`}
+              className="projeto-img"
+              loading="lazy"
+              onError={() => setImagemFalhou(true)}
+            />
+          ) : (
+            <div className="projeto-placeholder" aria-hidden="true">
+              <Globe size={28} />
+              <span>{projeto.nome}</span>
+            </div>
+          )}
+          <div className="projeto-img-overlay" />
+        </div>
+      </div>
+
+      <div className="projeto-body">
+        <span className="projeto-categoria">{projeto.categoria}</span>
+        <h3 className="projeto-titulo">{projeto.nome}</h3>
+        <p className="projeto-desc">{projeto.descricao}</p>
+        {temLink ? (
+          <a
+            className="projeto-link"
+            href={projeto.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Visitar projeto ${projeto.nome} (abre em nova aba)`}
+          >
+            Visitar projeto <ArrowUpRight size={16} className="icon-arrow-up" />
+          </a>
+        ) : (
+          <span className="projeto-link projeto-link-disabled" aria-disabled="true">
+            Em breve
+          </span>
+        )}
+      </div>
+      <div className="solucao-line" />
+    </motion.article>
+  );
+}
+
 function ProcessoStep({
   item,
   index,
@@ -317,6 +387,7 @@ export default function SiteCrystalCode() {
             {[
               { name: "Soluções", id: "solucoes" },
               { name: "O que fazemos", id: "construimos" },
+              { name: "Projetos", id: "projetos" },
               { name: "Processo", id: "processos" },
               { name: "Sobre", id: "sobre" },
             ].map((item) => (
@@ -454,6 +525,29 @@ export default function SiteCrystalCode() {
           <div id="solucoes" className="solucoes-grid">
             {SOLUCOES.map((s, i) => (
               <SolucaoCard key={s.titulo} {...s} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="projetos" className="projetos-section">
+        <div className="max-w-container">
+          <div className="text-center">
+            <FadeUp><Badge>Portfólio</Badge></FadeUp>
+            <FadeUp delay={0.05}>
+              <h2 className="section-title">Últimos Projetos</h2>
+            </FadeUp>
+            <FadeUp delay={0.1}>
+              <p className="section-desc">
+                Sites e soluções entregues com design sob medida e engenharia
+                real. Explore cada projeto diretamente no ar.
+              </p>
+            </FadeUp>
+          </div>
+
+          <div className="projetos-grid">
+            {PROJETOS.map((p, i) => (
+              <ProjetoCard key={p.id} projeto={p} index={i} />
             ))}
           </div>
         </div>
@@ -646,6 +740,7 @@ export default function SiteCrystalCode() {
             <h4>Empresa</h4>
             <a href="#sobre">Sobre</a>
             <a href="#processos">Processo</a>
+            <a href="#projetos">Projetos</a>
           </div>
 
           <div className="footer-col">
@@ -806,6 +901,36 @@ const CSS = `
   .solucao-desc { color: #9ca3af; font-size: 14px; line-height: 1.6; }
   .solucao-line { position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: #63b9c1; transition: width 0.4s ease; }
   .solucao-card:hover .solucao-line { width: 100%; }
+
+  /* ---------- PROJETOS / PORTFÓLIO ---------- */
+  .projetos-section { padding: 60px 24px 128px; position: relative; z-index: 10; }
+  .projetos-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 700px) { .projetos-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .projetos-grid { grid-template-columns: repeat(3, 1fr); } }
+  .projeto-card { position: relative; display: flex; flex-direction: column; padding: 14px 14px 28px; border-radius: 20px; background: linear-gradient(160deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.07); transition: border-color 0.3s, transform 0.3s; overflow: hidden; }
+  .projeto-card:hover, .projeto-card:focus-within { border-color: rgba(99,185,193,0.45); }
+  .projeto-card:hover .solucao-line, .projeto-card:focus-within .solucao-line { width: 100%; }
+  .projeto-preview { border-radius: 14px; overflow: hidden; background: #0f1b22; border: 1px solid rgba(99,185,193,0.18); box-shadow: 0 20px 45px -15px rgba(0,0,0,0.55); }
+  .projeto-browser { height: 32px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; padding: 0 12px; gap: 7px; }
+  .projeto-browser .dot { width: 8px; height: 8px; }
+  .projeto-url { margin-left: 8px; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .projeto-shot { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #0c1e28; }
+  .projeto-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform 0.6s ease; }
+  .projeto-card:hover .projeto-img { transform: scale(1.04); }
+  .projeto-img-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.35), transparent 55%); pointer-events: none; }
+  .projeto-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #63b9c1; font-size: 14px; font-weight: 600; background: radial-gradient(circle at 50% 40%, rgba(99,185,193,0.14), transparent 70%); }
+  .projeto-body { display: flex; flex-direction: column; align-items: flex-start; flex: 1; padding: 22px 14px 0; }
+  .projeto-categoria { font-size: 12px; font-weight: 700; color: #4b5f64; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
+  .projeto-titulo { font-size: 19px; font-weight: 700; margin-bottom: 10px; color: white; }
+  .projeto-desc { color: #9ca3af; font-size: 14px; line-height: 1.6; margin-bottom: 22px; flex: 1; }
+  .projeto-link { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; background: #63b9c1; color: #0c1e28; font-weight: 700; font-size: 14px; border-radius: 99px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .projeto-link:hover { transform: scale(1.035); box-shadow: 0 0 40px -10px rgba(99,185,193,0.6); }
+  .projeto-link:active { transform: scale(0.98); }
+  .projeto-link:focus-visible { outline-offset: 4px; border-radius: 99px; box-shadow: 0 0 40px -10px rgba(99,185,193,0.6); }
+  .icon-arrow-up { transition: transform 0.2s; }
+  .projeto-link:hover .icon-arrow-up, .projeto-link:focus-visible .icon-arrow-up { transform: translate(3px, -3px); }
+  .projeto-link-disabled { background: rgba(255,255,255,0.04); color: #7a8b90; border: 1px solid rgba(255,255,255,0.12); cursor: default; }
+  .projeto-link-disabled:hover { transform: none; box-shadow: none; }
 
   /* ---------- ENGENHARIA / PROVA DE CAPACIDADE ---------- */
   .engenharia-section { padding: 100px 24px; background: linear-gradient(to bottom, #0c1e28, #09161e); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 10; }
