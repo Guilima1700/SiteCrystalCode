@@ -30,6 +30,18 @@ import {
   BarChart3,
   Lock,
 } from "lucide-react";
+import {
+  siDocker,
+  siFirebase,
+  siJavascript,
+  siNextdotjs,
+  siNodedotjs,
+  siPostgresql,
+  siReact,
+  siSpringboot,
+  siTailwindcss,
+  siTypescript,
+} from "simple-icons";
 
 
 const SOLUCOES = [
@@ -120,8 +132,17 @@ const ENGENHARIA = [
 ];
 
 const TECNOLOGIAS = [
-  "React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS",
-  "PostgreSQL", "Firebase", "Docker", "Vercel", "REST APIs",
+  { nome: "JavaScript", icon: siJavascript },
+  { nome: "React", icon: siReact },
+  { nome: "Next.js", icon: siNextdotjs },
+  { nome: "TypeScript", icon: siTypescript },
+  { nome: "Tailwind CSS", icon: siTailwindcss },
+  { nome: "Docker", icon: siDocker },
+  { nome: "Java", icon: null },
+  { nome: "Spring Boot", icon: siSpringboot },
+  { nome: "PostgreSQL", icon: siPostgresql },
+  { nome: "Node.js", icon: siNodedotjs },
+  { nome: "Firebase", icon: siFirebase },
 ];
 
 
@@ -261,7 +282,6 @@ function ProcessoStep({
   );
 }
 
-
 export default function SiteCrystalCode() {
   const heroRef = useRef<HTMLDivElement>(null);
   const reduce = useMotionSafe();
@@ -348,99 +368,6 @@ export default function SiteCrystalCode() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={reduce ? { opacity: 1 } : { opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
-          className="dashboard-container"
-        >
-          <div className="browser-header">
-            <div className="dot dot-red" />
-            <div className="dot dot-yellow" />
-            <div className="dot dot-green" />
-            <span className="browser-url">app.seuprojeto.com</span>
-          </div>
-
-          <div className="dashboard-content">
-            <div className="dash-sidebar">
-              <div className="dash-logo-mini" />
-              {[LayoutDashboard, BarChart3, Users, Database, Plug].map(
-                (Icon, i) => (
-                  <div
-                    key={i}
-                    className={`dash-nav-item ${i === 0 ? "active" : ""}`}
-                  >
-                    <Icon size={16} />
-                  </div>
-                )
-              )}
-            </div>
-
-            <div className="dash-main">
-              <div className="dash-kpis">
-                {[
-                  { label: "Usuários ativos", trend: "+" },
-                  { label: "Requisições/dia", trend: "+" },
-                  { label: "Uptime", trend: "=" },
-                ].map((kpi, i) => (
-                  <div className="dash-kpi" key={i}>
-                    <span className="dash-kpi-label">{kpi.label}</span>
-                    <div className="dash-kpi-bar">
-                      <motion.div
-                        className="dash-kpi-fill"
-                        initial={{ width: "0%" }}
-                        whileInView={{ width: `${55 + i * 15}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, ease: EASE, delay: 0.3 + i * 0.1 }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="dash-chart-row">
-                <div className="dash-chart-box">
-                  <div className="dash-chart-bars">
-                    {[40, 65, 45, 80, 60, 90, 70].map((h, i) => (
-                      <motion.div
-                        key={i}
-                        className="dash-bar"
-                        initial={{ height: "0%" }}
-                        whileInView={{ height: `${h}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, ease: EASE, delay: 0.4 + i * 0.05 }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="dash-table-box">
-                  {[1, 2, 3, 4].map((r) => (
-                    <div className="dash-table-row" key={r}>
-                      <div className="dash-table-dot" />
-                      <div className="dash-table-line" />
-                      <div className="dash-table-line short" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <motion.div
-            className="float-chip chip-api"
-            animate={reduce ? {} : { y: [0, -10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <Plug size={14} /> API conectada
-          </motion.div>
-          <motion.div
-            className="float-chip chip-db"
-            animate={reduce ? {} : { y: [0, 10, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          >
-            <Database size={14} /> Banco de dados sincronizado
-          </motion.div>
-        </motion.div>
       </section>
 
       <section className="clients-section">
@@ -648,9 +575,38 @@ export default function SiteCrystalCode() {
             animate={reduce ? {} : { x: ["0%", "-50%"] }}
             transition={{ repeat: Infinity, ease: "linear", duration: 28 }}
           >
-            {[...TECNOLOGIAS, ...TECNOLOGIAS].map((tech, idx) => (
-              <div className="tech-chip" key={idx}>
-                {tech}
+            {[0, 1].map((group) => (
+              <div
+                className="tech-marquee-group"
+                key={group}
+                aria-hidden={group === 1}
+              >
+                {TECNOLOGIAS.map((tech) => (
+                  <div
+                    className="tech-chip"
+                    key={tech.nome}
+                    title={tech.nome}
+                    role="img"
+                    aria-label={group === 0 ? tech.nome : undefined}
+                  >
+                    {tech.icon ? (
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="tech-icon"
+                        aria-hidden="true"
+                      >
+                        <path d={tech.icon.path} fill={`#${tech.icon.hex}`} />
+                      </svg>
+                    ) : (
+                      <img
+                        src="/java.png"
+                        alt=""
+                        className="tech-icon"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
             ))}
           </motion.div>
@@ -676,7 +632,6 @@ export default function SiteCrystalCode() {
         </FadeUp>
       </section>
 
-      {/* ================= FOOTER ================= */}
       <footer className="site-footer">
         <div className="footer-container">
           <div className="footer-col footer-brand">
@@ -919,13 +874,15 @@ const CSS = `
   .processo-desc { color: #9ca3af; font-size: 15px; line-height: 1.6; max-width: 480px; }
 
   /* ---------- TECNOLOGIAS ---------- */
-  .tech-section { padding: 100px 0; position: relative; z-index: 10; }
+  .tech-section { padding: 42px 0 100px; position: relative; z-index: 10; }
   .tech-marquee-wrapper { position: relative; margin-top: 48px; overflow: hidden; }
   .tech-marquee-gradient { position: absolute; top: 0; bottom: 0; width: 100px; z-index: 5; pointer-events: none; }
   .tech-marquee-gradient-left { left: 0; background: linear-gradient(to right, #0c1e28, transparent); }
   .tech-marquee-gradient-right { right: 0; background: linear-gradient(to left, #0c1e28, transparent); }
-  .tech-marquee-track { display: flex; gap: 16px; width: max-content; }
-  .tech-chip { padding: 14px 28px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 99px; font-size: 15px; font-weight: 600; color: #cbd5d8; white-space: nowrap; }
+  .tech-marquee-track { display: flex; width: max-content; }
+  .tech-marquee-group { display: flex; flex-shrink: 0; gap: 16px; padding-right: 16px; }
+  .tech-chip { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; }
+  .tech-icon { width: 30px; height: 30px; object-fit: contain; }
 
   /* ---------- CTA FINAL ---------- */
   .cta-final-section { padding: 140px 24px; position: relative; z-index: 10; text-align: center; overflow: hidden; }
