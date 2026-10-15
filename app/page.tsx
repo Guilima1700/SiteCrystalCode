@@ -991,7 +991,7 @@ const CSS = `
   /* ---------- HERO ---------- */
   .hero-bg-glow { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 1100px; height: 650px; background: rgba(99, 185, 193, 0.13); filter: blur(130px); border-radius: 100%; pointer-events: none; z-index: 0; }
   .hero-grid-lines { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, black 0%, transparent 45%); }
-  .hero-section { position: relative; z-index: 10; padding: 168px 24px 90px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 1200px; margin: 0 auto; }
+  .hero-section { position: relative; z-index: 10; padding: 168px 24px 90px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 1200px; margin: 0 auto;height: 100vh; }
   h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 28px; line-height: 1.12; color: white; }
   @media (min-width: 640px) { h1 { font-size: 54px; } }
   @media (min-width: 900px) { h1 { font-size: 60px; } }
