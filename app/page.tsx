@@ -30,6 +30,8 @@ import {
   BarChart3,
   Lock,
   ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   siDocker,
@@ -251,18 +253,35 @@ function SolucaoCard({
   );
 }
 
-function ProjetoCard({ projeto, index }: { projeto: Projeto; index: number }) {
+function ProjetoCard({
+  projeto,
+  index,
+  total,
+}: {
+  projeto: Projeto;
+  index: number;
+  total: number;
+}) {
   const reduce = useMotionSafe();
   const [imagemFalhou, setImagemFalhou] = React.useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  React.useEffect(() => {
+    const el = imgRef.current;
+    if (el && el.complete && el.naturalWidth === 0) setImagemFalhou(true);
+  }, []);
   const temImagem = Boolean(projeto.imagem) && !imagemFalhou;
   const temLink = Boolean(projeto.url);
 
   return (
     <motion.article
       className="projeto-card"
+      role="group"
+      aria-roledescription="slide"
+      aria-label={`${index + 1} de ${total}: ${projeto.nome}`}
       initial={reduce ? { opacity: 1 } : { opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, margin: "0px 0px -60px 0px" }}
       transition={{ duration: 0.6, ease: EASE, delay: (index % 3) * 0.08 }}
       whileHover={reduce ? {} : { y: -6 }}
     >
@@ -278,10 +297,12 @@ function ProjetoCard({ projeto, index }: { projeto: Projeto; index: number }) {
         <div className="projeto-shot">
           {temImagem ? (
             <img
+              ref={imgRef}
               src={projeto.imagem}
               alt={`Prévia do site ${projeto.nome}`}
               className="projeto-img"
               loading="lazy"
+              draggable={false}
               onError={() => setImagemFalhou(true)}
             />
           ) : (
@@ -316,6 +337,171 @@ function ProjetoCard({ projeto, index }: { projeto: Projeto; index: number }) {
       </div>
       <div className="solucao-line" />
     </motion.article>
+  );
+}
+
+function CarrosselProjetos() {
+  const reduce = useMotionSafe();
+  const trackRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ active: false, moved: false, startX: 0, startLeft: 0 });
+  const [dragging, setDragging] = React.useState(false);
+  const [estado, setEstado] = React.useState({ prev: false, next: false, ativo: 0 });
+
+  const atualizar = React.useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const cards = Array.from(el.children) as HTMLElement[];
+    const prev = el.scrollLeft > 2;
+    const next = el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+    let ativo = 0;
+    if (prev && !next) {
+      ativo = cards.length - 1;
+    } else {
+      let menor = Infinity;
+      cards.forEach((c, i) => {
+        const d = Math.abs(c.offsetLeft - el.scrollLeft);
+        if (d < menor) {
+          menor = d;
+          ativo = i;
+        }
+      });
+    }
+    setEstado((atual) =>
+      atual.prev === prev && atual.next === next && atual.ativo === ativo
+        ? atual
+        : { prev, next, ativo }
+    );
+  }, []);
+
+  React.useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    atualizar();
+    el.addEventListener("scroll", atualizar, { passive: true });
+    const ro = new ResizeObserver(atualizar);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", atualizar);
+      ro.disconnect();
+    };
+  }, [atualizar]);
+
+  const behavior = reduce ? "auto" : "smooth";
+
+  const mover = (dir: 1 | -1) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const cards = Array.from(el.children) as HTMLElement[];
+    const passo =
+      cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : el.clientWidth;
+    el.scrollBy({ left: dir * passo, behavior });
+  };
+
+  const irPara = (i: number) => {
+    const el = trackRef.current;
+    const card = el?.children[i] as HTMLElement | undefined;
+    if (el && card) el.scrollTo({ left: card.offsetLeft, behavior });
+  };
+
+  const aoPressionar = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    const el = trackRef.current;
+    if (!el) return;
+    drag.current = { active: true, moved: false, startX: e.clientX, startLeft: el.scrollLeft };
+  };
+
+  const aoArrastar = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    const el = trackRef.current;
+    if (!d.active || !el) return;
+    const dx = e.clientX - d.startX;
+    if (!d.moved && Math.abs(dx) > 5) {
+      d.moved = true;
+      setDragging(true);
+      el.setPointerCapture(e.pointerId);
+    }
+    if (d.moved) el.scrollLeft = d.startLeft - dx;
+  };
+
+  const aoSoltar = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    const el = trackRef.current;
+    if (!d.active) return;
+    d.active = false;
+    if (d.moved) {
+      setDragging(false);
+      if (el?.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const aoClicar = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (drag.current.moved) {
+      e.preventDefault();
+      e.stopPropagation();
+      drag.current.moved = false;
+    }
+  };
+
+  const rolavel = estado.prev || estado.next;
+
+  return (
+    <div
+      className={`projetos-carousel${estado.prev ? " has-prev" : ""}${estado.next ? " has-next" : ""}`}
+    >
+      <div
+        ref={trackRef}
+        className={`projetos-track${dragging ? " is-dragging" : ""}`}
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Projetos desenvolvidos"
+        onPointerDown={aoPressionar}
+        onPointerMove={aoArrastar}
+        onPointerUp={aoSoltar}
+        onPointerCancel={aoSoltar}
+        onClickCapture={aoClicar}
+      >
+        {PROJETOS.map((p, i) => (
+          <ProjetoCard key={p.id} projeto={p} index={i} total={PROJETOS.length} />
+        ))}
+      </div>
+
+      {rolavel && (
+        <div className="projetos-controls">
+          <div className="projetos-dots" role="group" aria-label="Indicadores de projeto">
+            {PROJETOS.map((p, i) => (
+              <button
+                key={p.id}
+                type="button"
+                className={`projetos-dot${i === estado.ativo ? " active" : ""}`}
+                aria-label={`Ir para o projeto ${p.nome}`}
+                aria-current={i === estado.ativo ? "true" : undefined}
+                onClick={() => irPara(i)}
+              />
+            ))}
+          </div>
+          <div className="projetos-arrows">
+            <button
+              type="button"
+              className="projetos-arrow"
+              aria-label="Projeto anterior"
+              disabled={!estado.prev}
+              onClick={() => mover(-1)}
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              type="button"
+              className="projetos-arrow"
+              aria-label="Próximo projeto"
+              disabled={!estado.next}
+              onClick={() => mover(1)}
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -545,11 +731,7 @@ export default function SiteCrystalCode() {
             </FadeUp>
           </div>
 
-          <div className="projetos-grid">
-            {PROJETOS.map((p, i) => (
-              <ProjetoCard key={p.id} projeto={p} index={i} />
-            ))}
-          </div>
+          <CarrosselProjetos />
         </div>
       </section>
 
@@ -904,10 +1086,27 @@ const CSS = `
 
   /* ---------- PROJETOS / PORTFÓLIO ---------- */
   .projetos-section { padding: 60px 24px 128px; position: relative; z-index: 10; }
-  .projetos-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-  @media (min-width: 700px) { .projetos-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1000px) { .projetos-grid { grid-template-columns: repeat(3, 1fr); } }
-  .projeto-card { position: relative; display: flex; flex-direction: column; padding: 14px 14px 28px; border-radius: 20px; background: linear-gradient(160deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.07); transition: border-color 0.3s, transform 0.3s; overflow: hidden; }
+  .projetos-carousel { position: relative; }
+  .projetos-track { position: relative; display: flex; gap: 20px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 12px 0 28px; margin: -12px 0 -28px; cursor: grab; touch-action: pan-x pan-y; }
+  .projetos-track::-webkit-scrollbar { display: none; }
+  .projetos-track.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+  .projetos-track.is-dragging a { pointer-events: none; }
+  .projetos-carousel.has-next .projetos-track { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }
+  .projetos-carousel.has-prev .projetos-track { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to left, #000 calc(100% - 56px), transparent); }
+  .projetos-carousel.has-prev.has-next .projetos-track { -webkit-mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent); }
+  .projetos-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 44px; }
+  .projetos-dots { display: flex; align-items: center; gap: 8px; }
+  .projetos-dot { width: 8px; height: 8px; padding: 0; border: none; border-radius: 99px; background: rgba(255,255,255,0.18); cursor: pointer; transition: width 0.3s, background 0.3s; }
+  .projetos-dot:hover { background: rgba(99,185,193,0.6); }
+  .projetos-dot.active { width: 26px; background: #63b9c1; }
+  .projetos-arrows { display: flex; gap: 10px; }
+  .projetos-arrow { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.04); color: white; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s; }
+  .projetos-arrow:hover:not(:disabled) { background: rgba(99,185,193,0.12); border-color: rgba(99,185,193,0.5); color: #63b9c1; transform: scale(1.06); }
+  .projetos-arrow:active:not(:disabled) { transform: scale(0.96); }
+  .projetos-arrow:disabled { opacity: 0.35; cursor: default; }
+  .projeto-card { position: relative; display: flex; flex-direction: column; flex: 0 0 86%; min-width: 0; scroll-snap-align: start; padding: 14px 14px 28px; border-radius: 20px; background: linear-gradient(160deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.07); transition: border-color 0.3s, transform 0.3s; overflow: hidden; }
+  @media (min-width: 700px) { .projeto-card { flex-basis: calc((100% - 20px) / 1.6); } }
+  @media (min-width: 1000px) { .projeto-card { flex-basis: calc((100% - 40px) / 2.6); } }
   .projeto-card:hover, .projeto-card:focus-within { border-color: rgba(99,185,193,0.45); }
   .projeto-card:hover .solucao-line, .projeto-card:focus-within .solucao-line { width: 100%; }
   .projeto-preview { border-radius: 14px; overflow: hidden; background: #0f1b22; border: 1px solid rgba(99,185,193,0.18); box-shadow: 0 20px 45px -15px rgba(0,0,0,0.55); }
