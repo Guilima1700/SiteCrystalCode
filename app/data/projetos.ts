@@ -4,6 +4,8 @@ export type Projeto = {
   categoria: string;
   descricao: string;
   imagem?: string;
+  largura: number;
+  altura: number;
   url?: string;
 };
 
@@ -15,6 +17,8 @@ export const PROJETOS: Projeto[] = [
     descricao:
       "Site institucional para empresa de digitalização, organização e gestão eletrônica de documentos para prefeituras, órgãos públicos e empresas.",
     imagem: "/projetos/socon.png",
+    largura: 1897,
+    altura: 866,
     url: "https://socon-pi.vercel.app/",
   },
   {
@@ -24,6 +28,8 @@ export const PROJETOS: Projeto[] = [
     descricao:
       "Site de consultoria e assessoria em educação, com foco na gestão, viabilidade administrativa e sustentabilidade econômico-financeira de instituições de ensino.",
     imagem: "/projetos/alfa.png",
+    largura: 1901,
+    altura: 863,
     url: "https://alfa-consultoria-fz37-mocha.vercel.app/",
   },
   {
@@ -33,6 +39,8 @@ export const PROJETOS: Projeto[] = [
     descricao:
       "Site institucional para a Moura Locações, apresentando a empresa e seus serviços com um canal direto para o cliente entrar em contato.",
     imagem: "/projetos/moura.png",
+    largura: 1900,
+    altura: 867,
     url: "https://moura-locacoes.vercel.app/",
   },
 ];

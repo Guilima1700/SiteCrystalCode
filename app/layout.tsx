@@ -1,62 +1,51 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { SITE } from "./lib/site";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
-  title: "CrystalCode | Sites, Sistemas e Produtos Digitais Sob Medida",
-  description:
-    "Desenvolvemos sites, sistemas de gestão, plataformas, SaaS e integrações sob medida. Da landing page ao sistema completo, com engenharia de software real.",
-  keywords: [
-    "desenvolvimento de software",
-    "desenvolvimento web",
-    "sistemas de gestão",
-    "plataformas SaaS",
-    "integração de sistemas",
-    "desenvolvimento de sites",
-  ],
-
-  openGraph: {
-    title: "CrystalCode | Sites, Sistemas e Produtos Digitais Sob Medida",
-    description:
-      "Da landing page ao sistema completo. Desenvolvemos tecnologia sob medida para empresas que querem evoluir.",
-    url: "https://site-crystal-code.vercel.app/",
-    siteName: "CrystalCode",
-    images: [
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: "CrystalCode | Desenvolvimento de software sob medida",
+    template: "%s | CrystalCode",
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  icons: {
+    icon: [
+      { url: "/brand/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
       {
-        url: "/preview.jpg",
-        width: 1200,
-        height: 630,
-        alt: "CrystalCode — Sites, sistemas e produtos digitais",
+        url: "/brand/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
       },
     ],
-    locale: "pt_BR",
-    type: "website",
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "CrystalCode | Sites, Sistemas e Produtos Digitais Sob Medida",
-    description:
-      "Da landing page ao sistema completo. Tecnologia sob medida para o seu negócio.",
-    images: ["/preview.jpg"],
-  },
-
-  robots: {
-    index: true,
-    follow: true,
   },
 };
-
+export const viewport: Viewport = {
+  themeColor: "#0c1e28",
+  colorScheme: "dark",
+};
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-br">
-      <body className={inter.className}>{children}</body>
+    <html lang="pt-BR">
+      <body className={`${inter.className} ${inter.variable}`}>
+        <a className="skip-link" href="#conteudo">
+          Pular para o conteúdo
+        </a>
+        {children}
+      </body>
     </html>
   );
 }
