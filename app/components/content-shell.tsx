@@ -56,6 +56,7 @@ export function ContentShell({
           <a href={SITE.instagram} target="_blank" rel="noopener noreferrer">
             Instagram @crystallcode
           </a>
+          <Link href="/privacidade">Privacidade e cookies</Link>
         </nav>
       </footer>
     </div>

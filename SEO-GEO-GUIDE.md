@@ -6,6 +6,8 @@ Auditoria e implementação: **12 de novembro de 2026**. Domínio oficial: **htt
 
 Na mesma revisão, o responsável informou que **acabou de solicitar a indexação** da página de criação de sites no Search Console. A solicitação deve ser acompanhada pela Inspeção de URL; não é confirmação de inclusão no índice e não precisa ser repetida imediatamente.
 
+**Atualização de Analytics em 17/11/2026:** foi preparada a integração GA4 `G-865FRY6T9R`, com permissão antes da coleta e uma página `/privacidade`. O próximo deploy passa a ter **12 páginas no sitemap**; as 11 páginas mencionadas nas medições anteriores referem-se à versão anterior. Ver [GOOGLE-ANALYTICS-GUIDE.md](./GOOGLE-ANALYTICS-GUIDE.md) para configuração no painel, publicação e validação da coleta. A versão Analytics ainda não foi publicada a partir deste checkout.
+
 ## 1. Diagnóstico inicial
 
 | Área | Estado encontrado |
@@ -183,7 +185,7 @@ O **Google Rich Results Test foi tentado por código**, mas devolveu “Ocorreu 
 4. **Proteger previews** com Deployment Protection ou `X-Robots-Tag: noindex` no provedor. Não aplicar esse header ao domínio oficial. Se algum ambiente tiver conteúdo privado, exigir autenticação; robots/noindex não são controle de acesso. O domínio Vercel antigo exato redireciona pelo código; outros aliases devem ser revisados no painel.
 5. **Google Search Console:** adicionar/verificar propriedade de domínio `crystalcode.com.br` via registro DNS TXT fornecido pelo Google. Enviar `https://crystalcode.com.br/sitemap.xml`. Inspecionar home, Serviços e uma página de serviço; conferir “Teste de URL publicada” e solicitar indexação das páginas prioritárias. Não é necessário enviar cada URL repetidamente. Acompanhar Páginas, Sitemaps e Core Web Vitals.
 6. **Bing Webmaster Tools:** verificar/importar propriedade e enviar o mesmo sitemap. IndexNow pode ser avaliado quando houver publicação frequente; não foi adicionado um endpoint ou chave fictícia.
-7. **Validar a implantação real:** `/robots.txt` 200 texto, `/sitemap.xml` 200 XML com 11 URLs, `/llms.txt` 200 texto, páginas públicas 200 e URL aleatória 404. Confirmar canonical/OG sem `www` e sem URL de preview. Testar também caminhos internos e query strings nas variantes de domínio.
+7. **Validar a implantação real:** `/robots.txt` 200 texto, `/sitemap.xml` 200 XML com 12 URLs na versão que inclui `/privacidade`, `/llms.txt` 200 texto, páginas públicas 200 e URL aleatória 404. Confirmar canonical/OG sem `www` e sem URL de preview. Testar também caminhos internos e query strings nas variantes de domínio.
 8. Abrir [Rich Results Test](https://search.google.com/test/rich-results), [Schema Markup Validator](https://validator.schema.org/) e [PageSpeed Insights](https://pagespeed.web.dev/) com a URL publicada. O teste do Google pode exigir seu login. Revisar mobile e desktop e repetir após a distribuição do deploy/cache.
 9. Confirmar apresentação do cartão social ao compartilhar a home e atualizar a bio do Instagram com o domínio canônico. Manter a mesma grafia da marca e os mesmos contatos nos perfis comerciais.
 10. Após dados suficientes, avaliar métricas reais de usuários e consultas no Search Console. A indexação, os rich results e as citações em ferramentas de IA dependem dos mecanismos externos; não têm prazo ou posição garantidos.

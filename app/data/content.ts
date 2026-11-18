@@ -180,6 +180,12 @@ export const PAGES = [
     description:
       "Converse com a CrystalCode sobre sistemas sob medida e produtos digitais. Atendimento por WhatsApp e e-mail, com equipe de Aracaju, Sergipe.",
   },
+  {
+    path: "/privacidade",
+    title: "Privacidade e cookies",
+    description:
+      "Entenda a medição de visitas com Google Analytics, os cookies e as escolhas de privacidade disponíveis no site da CrystalCode.",
+  },
   ...SERVICES.map((service) => ({
     path: `/servicos/${service.slug}`,
     title: service.title,

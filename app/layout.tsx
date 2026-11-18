@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { SITE } from "./lib/site";
+import { GoogleAnalytics } from "./components/google-analytics";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,6 +9,9 @@ const inter = Inter({
   display: "swap",
   variable: "--font-inter",
 });
+
+const measurementId =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? SITE.googleAnalyticsId;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -45,6 +49,11 @@ export default function RootLayout({
           Pular para o conteúdo
         </a>
         {children}
+        {process.env.NODE_ENV === "production" &&
+          process.env.VERCEL_ENV !== "preview" &&
+          /^G-[A-Z0-9]{4,}$/.test(measurementId) && (
+            <GoogleAnalytics measurementId={measurementId} />
+          )}
       </body>
     </html>
   );

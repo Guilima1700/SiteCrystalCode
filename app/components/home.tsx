@@ -1093,6 +1093,7 @@ export default function SiteCrystalCode() {
                 Instagram @crystallcode
               </a>
               <Link href="/contato">Contato · Aracaju, Sergipe</Link>
+              <Link href="/privacidade">Privacidade e cookies</Link>
             </div>
           </div>
 

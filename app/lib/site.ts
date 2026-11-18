@@ -1,5 +1,6 @@
 export const SITE = {
   name: "CrystalCode",
+  googleAnalyticsId: "G-865FRY6T9R",
   url: "https://crystalcode.com.br",
   description:
     "Desenvolvimento de software sob medida em Aracaju, Sergipe: sistemas empresariais, sites profissionais, plataformas web, SaaS e automação de processos.",

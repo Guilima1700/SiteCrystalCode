@@ -181,6 +181,7 @@ for (const width of [390, 1440]) {
       "/sobre",
       "/projetos",
       "/contato",
+      "/privacidade",
       "/servicos/sistemas-sob-medida",
       "/nao-existe-seo",
     ]) {

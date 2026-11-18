@@ -244,7 +244,93 @@ export default async function InformationPage({
           </section>
         </>
       )}
-      {page.path !== "/contato" && (
+      {page.path === "/privacidade" && (
+        <>
+          <p className="inner-lead">
+            Esta página explica a medição de uso do site da CrystalCode e as
+            escolhas disponíveis para o visitante.
+          </p>
+          <section>
+            <h2>Google Analytics e sua escolha</h2>
+            <p>
+              Usamos o Google Analytics 4 para entender visitas às páginas e
+              cliques nos nossos canais de contato. A tag de medição só é
+              carregada depois que você seleciona “Permitir medição”. Recusar
+              mantém o site disponível e não carrega a tag do Analytics.
+            </p>
+            <p>
+              A preferência é salva no armazenamento local deste navegador por
+              até 180 dias, sem nome ou e-mail do visitante. Você pode rever sua
+              decisão pelo botão “Preferências de cookies”. Se o navegador
+              bloquear esse armazenamento, a escolha vale apenas para a página
+              aberta.
+            </p>
+          </section>
+          <section>
+            <h2>O que é medido</h2>
+            <p>
+              Após a permissão, enviamos visualizações de páginas e o tipo de
+              canal de contato clicado: WhatsApp, e-mail ou Instagram. Os
+              eventos implementados não incluem o conteúdo de mensagens, dados
+              de formulários ou a URL completa do link de contato. Os endereços
+              de página enviados por esses eventos excluem parâmetros de
+              consulta e fragmentos.
+            </p>
+            <p>
+              Ao carregar a tag, seu navegador se comunica com o Google, que
+              também pode processar informações técnicas da conexão, do
+              navegador e do dispositivo. O Analytics pode criar cookies com
+              nomes como _ga e _ga_ para distinguir acessos. A retenção dos
+              dados no serviço depende da configuração da propriedade do
+              Analytics.
+            </p>
+            <p>
+              Esta integração mantém negadas as permissões de armazenamento
+              publicitário, uso de dados para anúncios e personalização de
+              anúncios. Não ativamos Google Signals nem identificação por nome,
+              e-mail ou User-ID.
+            </p>
+          </section>
+          <section>
+            <h2>Como recusar ou retirar a permissão</h2>
+            <p>
+              Abra “Preferências de cookies” e selecione “Recusar medição”. A
+              integração desativa os próximos eventos e remove os cookies de
+              Analytics acessíveis neste domínio. Essa escolha não apaga
+              automaticamente dados já enviados ao Google.
+            </p>
+            <p>
+              Você também pode limpar os dados do site nas configurações do
+              navegador. Nesse caso, uma nova escolha será solicitada na próxima
+              visita. Bloqueadores de conteúdo podem impedir a medição mesmo
+              quando há permissão.
+            </p>
+          </section>
+          <section>
+            <h2>Serviços externos e contato</h2>
+            <p>
+              Ao escolher um canal de contato ou abrir um link externo, você
+              passa a utilizar o serviço de destino, sujeito às políticas dele.
+              Consulte{" "}
+              <a
+                href="https://policies.google.com/technologies/partner-sites?hl=pt-BR"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                como o Google usa informações de sites que utilizam seus
+                serviços
+              </a>
+              .
+            </p>
+            <p>
+              Para dúvidas sobre a medição no site da CrystalCode ou
+              solicitações relacionadas aos seus dados, entre em contato pelo
+              e-mail <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+            </p>
+          </section>
+        </>
+      )}
+      {page.path !== "/contato" && page.path !== "/privacidade" && (
         <section className="inner-cta">
           <h2>Vamos conversar sobre seu projeto?</h2>
           <p>Compartilhe seu contexto para avaliarmos a solução adequada.</p>
