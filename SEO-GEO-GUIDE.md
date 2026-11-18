@@ -332,6 +332,26 @@ Após publicar:
 
 Fontes: [nomes de sites e alternateName](https://developers.google.com/search/docs/appearance/site-names), [Organization](https://developers.google.com/search/docs/appearance/structured-data/organization) e [solicitar novo rastreamento](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl).
 
+## 10. Verificação após indexação — 18/11/2026
+
+O responsável informou que as URLs estão indexadas, mas não encontrou o site na pesquisa ampla por “crystal code”. O print mostra uma resposta de IA com vários significados da expressão e uma empresa homônima de outro país. Isso sugere ambiguidade da consulta e concorrência, mas não permite concluir quais fatores determinaram a posição da CrystalCode.
+
+Na verificação HTTP da home e de `/sobre`, em 18/11, foram confirmados status 200, canonical oficial, ausência de noindex, texto visível **CrystalCode (Crystal Code)**, descrições com ambas as grafias e `alternateName: "Crystal Code"` em `Organization`/`WebSite`. Portanto, as mudanças da revisão anterior já estavam publicadas. Uma resposta pública atual não comprova qual versão está armazenada no índice do Google.
+
+Foi feito um reforço pontual no título da home: **Crystal Code — Software sob medida em Aracaju | CrystalCode**. Ele explicita a variante e o contexto local, mantendo o nome principal nos dados da marca, a mesma URL e o conteúdo visual. A alteração se propaga ao Open Graph, Twitter e título de página enviado ao Analytics. Não garante posição e precisa de publicação.
+
+Validação desta revisão: lint e build/TypeScript aprovados, **27 testes aprovados** em 52,4 s, incluindo título, metadados, conteúdo sem JavaScript, dados estruturados, acessibilidade e regressões de Analytics.
+
+Próximos passos para diagnóstico:
+
+1. Na Inspeção de URL da home, verificar a **data do último rastreamento** e, na versão rastreada/HTML, procurar “Crystal Code”. “URL está no Google” não garante que o índice já contenha a última versão do texto.
+2. Se o Google ainda tem uma versão anterior, solicitar uma vez a indexação depois do novo deploy. Se já leu a versão atual, não repetir solicitações como estratégia de posicionamento.
+3. Em Desempenho → Resultados da pesquisa, filtrar a consulta “crystal code” e observar impressões, cliques e posição média no período disponível. Ausência da empresa na parte visível de um print não prova ausência de todos os resultados; um relatório sem impressões também deve ser interpretado no contexto do período e das limitações de exibição dos dados.
+4. Comparar a consulta ampla com as buscas específicas “crystal code aracaju” e “crystal code sergipe”, sem tratar esses testes manuais como garantia de posição para outras pessoas. Manter coerência da marca e região em perfis oficiais e referências reais de clientes/parceiros.
+5. Avaliar a evolução durante algumas semanas, sem trocar títulos e repetir nomes continuamente. Indexação, aparência do nome do site, posição orgânica e inclusão na Visão geral por IA são resultados diferentes. `alternateName` auxilia a identidade/nome alternativo; não impõe uma classificação para a consulta.
+
+Referências: [guia inicial do Google e tempo para avaliar mudanças](https://developers.google.com/search/docs/fundamentals/seo-starter-guide), [nomes de sites](https://developers.google.com/search/docs/appearance/site-names) e [novo rastreamento](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl).
+
 ## Referências de implementação
 
 - [Next.js: metadados](https://nextjs.org/docs/app/api-reference/functions/generate-metadata), [sitemap](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap), [robots](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) e [redirecionamentos/statusCode](https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects).

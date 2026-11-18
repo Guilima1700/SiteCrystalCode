@@ -152,7 +152,7 @@ export const SERVICES: Service[] = [
 export const PAGES = [
   {
     path: "/",
-    title: "Desenvolvimento de software sob medida em Aracaju",
+    title: "Crystal Code — Software sob medida em Aracaju",
     description:
       "CrystalCode (Crystal Code): sistemas sob medida, sites profissionais, plataformas web, SaaS e automação. Desenvolvimento de software em Aracaju, Sergipe.",
   },

@@ -16,6 +16,9 @@ for (const route of PAGES) {
     const page = await context.newPage();
     await page.goto(`http://127.0.0.1:3100${route.path}`);
     await expect(page).toHaveTitle(`${route.title} | CrystalCode`);
+    if (route.path === "/") {
+      await expect(page).toHaveTitle(/Crystal Code.*Aracaju.*CrystalCode/);
+    }
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveCount(1);
