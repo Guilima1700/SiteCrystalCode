@@ -2,6 +2,10 @@
 
 Auditoria e implementação: **12 de novembro de 2026**. Domínio oficial: **https://crystalcode.com.br/**, sem `www`. O trabalho foi aplicado ao checkout local; este documento não comprova publicação ou indexação pelo Google.
 
+**Revisão em 17 de novembro de 2026:** a implementação anterior foi confirmada no domínio público. Sitemap/robots retornam 200; as 11 páginas do sitemap retornam 200, têm um H1, JSON-LD legível e não apresentam noindex. O responsável informou que já cadastrou o site no Google Search Console e no Bing Webmaster Tools. Isso confirma a preparação técnica observável, não a indexação nas contas dos buscadores. Consulte a seção 8 para os próximos passos e o estado atualizado dos alertas.
+
+Na mesma revisão, o responsável informou que **acabou de solicitar a indexação** da página de criação de sites no Search Console. A solicitação deve ser acompanhada pela Inspeção de URL; não é confirmação de inclusão no índice e não precisa ser repetida imediatamente.
+
 ## 1. Diagnóstico inicial
 
 | Área | Estado encontrado |
@@ -114,7 +118,7 @@ Resultados verificados:
 - Axe WCAG A/AA e WCAG 2.1 AA sem violações detectadas nas páginas representativas em mobile e desktop. Isso não substitui auditoria manual completa com tecnologia assistiva.
 - Headers de proteção, ícones, cartão social e resposta AVIF/WebP do otimizador testados por HTTP.
 - `npm audit --omit=dev`: **zero vulnerabilidades**.
-- Auditoria completa: **8 alertas moderados** na cadeia de desenvolvimento `eslint-config-next` → `typescript-eslint` → `minimatch` 10.2.6. O npm propõe downgrade incompatível de configuração para corrigir via `--force`; não foi aplicado. Acompanhar atualização upstream. Não há alertas altos/críticos restantes.
+- Auditoria completa **na implementação de 12/11**: havia 8 alertas moderados na cadeia `eslint-config-next` → `typescript-eslint` → `minimatch` 10.2.6. O estado mudou com novos avisos e a correção de 17/11; os números atuais estão na seção 8.
 
 ### Performance
 
@@ -233,12 +237,72 @@ Não há `lastmod` atualmente porque o projeto não possui data editorial confi�
 - **Publicação e configurações de contas/DNS ainda dependem do responsável.** Não foram alterados Vercel, Search Console, Bing, DNS ou redes sociais nesta execução.
 - **INP/CrUX e PageSpeed da nova versão pública ainda pendentes.** Lighthouse local é evidência de laboratório, não uma medição de usuários reais.
 - **Rich Results Test sem conclusão**, por exigência de login externo. No Schema Markup Validator, a validação externa da página de automação/integrações ficou pendente por verificação anti-bot, embora os testes locais dessa página tenham passado. Validar manualmente após publicar e autenticar.
-- **8 alertas moderados de desenvolvimento** ainda presentes. Atualizar quando houver versão compatível corrigida; não usar `npm audit fix --force` automaticamente.
+- **Alertas de dependências:** o problema original de minimatch foi corrigido em 17/11; existem novos alertas de desenvolvimento de picomatch, detalhados na seção 8. Não usar `npm audit fix --force` automaticamente.
 - **CSP completa e Trusted Types** exigem um projeto de segurança separado, com nonces/hashes e testes do runtime do Next. A CSP adicionada protege enquadramento/objetos/base, sem prometer mitigar todo XSS.
 - Criar estudos de caso apenas com autorização, contexto e resultados documentados. Para os projetos atuais, confirmar futuramente domínios definitivos no lugar dos links Vercel existentes.
 - Publicar conteúdos educativos úteis sobre requisitos, integração de sistemas, escolha entre software pronto e sob medida e planejamento de SaaS. Incluir responsáveis/revisores reais e datas editoriais verificáveis; evitar textos repetitivos focados só em palavras-chave.
 - Não foi criado CNPJ ou endereço. Se futuramente houver dados institucionais adicionais confirmados, incorporá-los onde forem úteis e coerentes; não são pré-requisitos para os schemas atuais.
 - `/llms.txt` é apenas um índice complementar para ferramentas que eventualmente o consultem. **Não é fator de ranqueamento nem requisito do Google ou de suas respostas de IA.** A base continua sendo HTML acessível, conteúdo útil, identidade consistente e links rastreáveis.
+
+## 8. Revisão de segurança e plano de visibilidade — 17/11/2026
+
+### Correção aplicada
+
+O `package-lock.json` foi atualizado com versões compatíveis da cadeia do ESLint: `typescript-eslint`/pacotes relacionados passaram de 8.72.2 para **8.73.0**, com `minimatch` **11.0.9**. Isso corrige a vulnerabilidade de amplificação de padrões que originava os oito alertas moderados anteriores. Não houve downgrade de Next/ESLint, migração forçada de Tailwind, edição manual de node_modules ou alteração no layout/conteúdo comercial.
+
+Validação após a atualização: lint sem erros/avisos, build de produção com TypeScript aprovado e **18 testes aprovados** (39,3 s na rodada de 17/11), incluindo páginas sem JavaScript, metadados, sitemap/robots, status HTTP, layout/acessibilidade e interações. A atualização desta revisão ainda não foi publicada a partir deste checkout.
+
+O audit completo agora também identifica **19 ocorrências classificadas como altas**, propagadas pela árvore de ferramentas de desenvolvimento a partir de **uma vulnerabilidade de picomatch** (GHSA-fc5q-39xc-vjpf / CVE-2026-112366). Esse número representa pacotes afetados na cadeia, e não 19 falhas independentes implementadas no site. O aviso oficial foi revisado em 17/11 e informa **nenhuma versão corrigida**; o registro npm consultado oferece picomatch 4.0.7 como versão mais recente. Não foi instalada uma versão fictícia nem aplicado um patch não validado a um parser de terceiros.
+
+O problema envolve consumo excessivo de CPU com padrões glob especialmente construídos. Neste projeto, o uso identificado está no lint/build e na busca de arquivos de ferramentas de desenvolvimento, com configurações do próprio repositório. Não foi identificado um formulário ou endpoint público que encaminhe padrões de visitantes a essas ferramentas. **`npm audit --omit=dev` permanece com zero vulnerabilidades reportadas.** Isso não prova ausência de toda falha possível no software; delimita o resultado da auditoria de dependências de produção.
+
+Medidas de manutenção: executar lint/build somente sobre alterações de origem confiável; manter o servidor de desenvolvimento fora da internet; acompanhar a correção oficial do picomatch e atualizar o lockfile assim que houver uma versão compatível corrigida. Os alertas não devem ser ocultados com exclusões do audit. Não são um fator direto de posicionamento do Google.
+
+### O que foi observado no site publicado
+
+- `https://crystalcode.com.br/sitemap.xml`: HTTP 200, XML com 11 URLs.
+- `https://crystalcode.com.br/robots.txt`: HTTP 200, `Allow: /` e referência ao sitemap correto.
+- Todas as 11 URLs: HTTP 200, um H1, sem noindex observado e JSON-LD sintaticamente válido no HTML entregue em requisições identificadas como Googlebot. Usar esse User-Agent não reproduz o ambiente interno do Google nem comprova um rastreamento real do buscador.
+- Amostras de canonical, titles e descriptions: domínio oficial sem `www` e metadados próprios.
+- URL inexistente: HTTP 404.
+- `www` continua respondendo **307** no provedor, preservando caminho/query. Trocar para permanente no painel da Vercel continua recomendado. HTTP→HTTPS retorna **308 permanente**.
+
+### Entender os dois prints
+
+O primeiro print apresenta a **Visão geral criada por IA do Google**, com empresas citadas e links para fontes. Não é um cadastro manual de empresas naquela lista. Segundo o Google, uma página precisa estar indexada e apta a aparecer com snippet para ser elegível como fonte; não há schema, arquivo de IA ou configuração especial que garanta a inclusão. Conteúdo, indexação e qualidade ajudam a disputar essa visibilidade, mas a seleção varia conforme a pesquisa e não é garantida.
+
+O segundo print mostra o sitemap como **Processing**, sem erros e sem último rastreamento informado. O contador de zero URLs, nessa condição, não comprova que o arquivo esteja vazio ou que a submissão tenha falhado: o arquivo público foi consultado e contém 11 URLs. Aguardar o processamento e usar URL Inspection ajuda a diferenciar descoberta, rastreamento e indexação. Não é necessário apagar e reenviar o sitemap repetidamente.
+
+### Próximas ações, na ordem
+
+1. **Confirmar indexação de páginas específicas.** No Search Console já cadastrado, abrir “Inspeção de URL” e consultar:
+   - `https://crystalcode.com.br/`
+   - `https://crystalcode.com.br/servicos/criacao-de-sites`
+   - `https://crystalcode.com.br/servicos/sistemas-sob-medida`
+
+   Usar “Testar URL publicada” para conferir acesso atual. Se a URL estiver ausente e for elegível, solicitar indexação uma vez. Se o status for “Descoberta, mas não indexada” ou “Rastreada, mas não indexada”, examinar o motivo, o canonical e o HTML recebido antes de reenviar. Se já estiver indexada, o trabalho passa a ser principalmente de conteúdo, relevância e autoridade. Repetir pedidos não acelera o rastreamento.
+
+2. **Acompanhar o Bing já cadastrado.** Usar URL Inspection nas mesmas páginas e acompanhar o processamento do sitemap. O painel diferencia descoberta, rastreamento e indexação; não presumir erro por um contador ainda não preenchido. Se houver erro de busca/processamento, consultar o detalhe antes de alterar código ou reenviar.
+
+3. **Fortalecer a página existente de criação de sites.** Ela já está publicada, tem conteúdo próprio e seção de atuação em Aracaju/Sergipe. É o destino adequado para a pesquisa do print. Em futuras revisões, priorizar informações que ajudem a contratar: quais problemas resolve, diferença entre site institucional e plataforma, etapas, integrações, manutenção e como o orçamento é definido. Não criar páginas quase iguais para cada município. Fazer o mesmo para sistemas/SaaS, preservando o posicionamento de software sob medida.
+
+4. **Documentar provas reais do trabalho.** Para SOCON, Alfa Consultoria e Moura Locações, desenvolver estudos de caso com autorização e informações confirmadas: contexto, o que foi desenvolvido, papel da equipe e capturas do produto. Publicar resultados numéricos somente quando documentados. Quando adequado e acordado com o cliente, um crédito ou referência natural ao trabalho da CrystalCode no site dele ajuda pessoas e buscadores a encontrar a empresa. Não comprar links, inventar depoimentos ou montar listas falsas de “melhores empresas”.
+
+5. **Manter identidade consistente.** Nome CrystalCode, domínio oficial, e-mail, WhatsApp e Instagram @crystallcode devem coincidir no site e nos perfis oficiais. Descrever a empresa como desenvolvimento de software e produtos digitais de Aracaju/SE. Usar o domínio em perfis e apresentações públicas; conquistar referências de clientes e parceiros reais.
+
+6. **Avaliar Perfil da Empresa no Google apenas se houver atendimento presencial real.** Não ter sede comercial, por si só, não resolve a elegibilidade. Se a equipe visita clientes de fato e atende aos demais critérios, pode avaliar um perfil de área de serviço, com endereço real para verificação e endereço oculto do público. Se o serviço for exclusivamente online, o Google informa que esse tipo de negócio não é elegível. Não criar endereço, escritório virtual ou atendimento presencial fictício para cadastrar. Isso é separado de aparecer no resultado orgânico/Visão geral por IA.
+
+7. **Medir evolução semanalmente.** No Search Console, acompanhar impressões, cliques, páginas e consultas relacionadas a CrystalCode, criação de sites em Aracaju/Sergipe, sistemas sob medida e desenvolvimento de software. Não existe um prazo garantido para entrar na resposta de IA; o próprio rastreamento pode levar dias ou semanas. Na interface do Bing, o relatório de AI Performance mostrado no menu pode ser consultado quando houver dados; não confundir ausência inicial de dados com uma falha técnica do site.
+
+8. **Publicar a atualização de dependências desta revisão.** O lockfile corrigido está local; publicar pelo fluxo normal do projeto para que futuros builds usem as versões atualizadas. O cadastro nos buscadores e a versão SEO anterior já publicada não publicam automaticamente mudanças feitas neste checkout.
+
+### Fontes desta revisão
+
+- [Google: requisitos para AI Overviews e AI Mode](https://developers.google.com/search/docs/appearance/ai-features).
+- [Google: solicitar novo rastreamento e limites](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl).
+- [Bing: sitemaps](https://www.bing.com/webmasters/help/sitemaps-3b5cf6ed) e [inspeção de URLs](https://www.bing.com/webmasters/help/url-inspection-55a30305).
+- [Google: elegibilidade do Perfil da Empresa](https://support.google.com/business/answer/13763036) e [áreas de serviço](https://support.google.com/business/answer/9157481).
+- [Aviso original de minimatch](https://github.com/advisories/GHSA-g3hv-75wg-m249), [release de typescript-eslint 8.73.0](https://github.com/typescript-eslint/typescript-eslint/releases/tag/v8.73.0) e [aviso atual de picomatch sem correção publicada](https://github.com/advisories/GHSA-fc5q-39xc-vjpf).
 
 ## Referências de implementação
 
