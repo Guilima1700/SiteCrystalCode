@@ -897,11 +897,11 @@ export default function SiteCrystalCode() {
                   Não somos apenas <br /> desenvolvedores.
                 </h2>
                 <p className="story-desc">
-                  A CrystalCode nasceu para atender negócios que precisavam de
-                  mais do que um site padrão. Começamos com sistemas para
-                  operações reais e, a partir disso, estruturamos uma forma de
-                  trabalhar que combina design, engenharia e atenção ao que cada
-                  cliente realmente precisa.
+                  A {SITE.name} ({SITE.alternateName}) nasceu para atender
+                  negócios que precisavam de mais do que um site padrão.
+                  Começamos com sistemas para operações reais e, a partir disso,
+                  estruturamos uma forma de trabalhar que combina design,
+                  engenharia e atenção ao que cada cliente realmente precisa.
                 </p>
                 <p className="story-desc">
                   Hoje unimos <strong>design de interface</strong> com{" "}

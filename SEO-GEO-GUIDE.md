@@ -8,6 +8,8 @@ Na mesma revisão, o responsável informou que **acabou de solicitar a indexaç�
 
 **Atualização de Analytics em 17/11/2026:** foi preparada a integração GA4 `G-865FRY6T9R`, com permissão antes da coleta e uma página `/privacidade`. O próximo deploy passa a ter **12 páginas no sitemap**; as 11 páginas mencionadas nas medições anteriores referem-se à versão anterior. Ver [GOOGLE-ANALYTICS-GUIDE.md](./GOOGLE-ANALYTICS-GUIDE.md) para configuração no painel, publicação e validação da coleta. A versão Analytics ainda não foi publicada a partir deste checkout.
 
+**Variação da marca em 17/11/2026:** CrystalCode permanece o nome principal e **Crystal Code** passa a ser informado como variação com espaço. A implementação está na seção 9. O código local precisa ser publicado antes de solicitar novo rastreamento dessa alteração.
+
 ## 1. Diagnóstico inicial
 
 | Área | Estado encontrado |
@@ -305,6 +307,30 @@ O segundo print mostra o sitemap como **Processing**, sem erros e sem último ra
 - [Bing: sitemaps](https://www.bing.com/webmasters/help/sitemaps-3b5cf6ed) e [inspeção de URLs](https://www.bing.com/webmasters/help/url-inspection-55a30305).
 - [Google: elegibilidade do Perfil da Empresa](https://support.google.com/business/answer/13763036) e [áreas de serviço](https://support.google.com/business/answer/9157481).
 - [Aviso original de minimatch](https://github.com/advisories/GHSA-g3hv-75wg-m249), [release de typescript-eslint 8.73.0](https://github.com/typescript-eslint/typescript-eslint/releases/tag/v8.73.0) e [aviso atual de picomatch sem correção publicada](https://github.com/advisories/GHSA-fc5q-39xc-vjpf).
+
+## 9. Pesquisas por “CrystalCode” e “Crystal Code”
+
+A busca por uma grafia pode retornar resultados diferentes da outra. Em 17/11, as respostas públicas da home e de `/sobre` foram consultadas e não continham a grafia com espaço no texto visível nem `alternateName` no JSON-LD. Isso é uma oportunidade de tornar a identidade mais explícita, não uma prova de que esse seja o único motivo da diferença de resultados.
+
+Implementação desta revisão:
+
+- `app/lib/site.ts`: nome principal **CrystalCode**, nome alternativo **Crystal Code**.
+- `app/components/json-ld.tsx`: `alternateName: "Crystal Code"` em `Organization` e `WebSite`, preservando nomes principais, IDs da entidade e domínio oficial.
+- Home e Sobre: inclusão natural de **CrystalCode (Crystal Code)** no texto institucional visível, presente no HTML inicial sem depender de JavaScript.
+- `app/data/content.ts`: descrições próprias da home e Sobre incluem as duas grafias; OG/Twitter derivam dessas mesmas descrições.
+- `/llms.txt`: informa a variação como complemento de identidade. Esse arquivo não é tratado como fator de ranqueamento do Google.
+- Testes existentes ampliados para verificar a associação de nomes no HTML/JSON-LD das páginas servidas. A marca visual, o domínio, os canonicals e as rotas continuam os mesmos; não foi criada uma página duplicada para a grafia com espaço.
+
+Após publicar:
+
+1. Abrir a home e `/sobre`, conferir a nova menção e o JSON-LD.
+2. No Search Console já configurado, inspecionar `https://crystalcode.com.br/` e `https://crystalcode.com.br/sobre`, testar a URL publicada e solicitar novo rastreamento uma vez para essas alterações.
+3. Manter o nome principal nos perfis oficiais. Quando útil, explicar a variação com espaço na descrição/bio, com o mesmo domínio oficial. Não é necessário mudar o usuário do Instagram ou a marca para duas palavras.
+4. Acompanhar impressões e cliques para ambas as consultas no relatório de Desempenho. Um resultado diferente em uma pesquisa isolada não confirma bloqueio de indexação.
+
+`alternateName` ajuda a representar um nome alternativo ao lado da identidade visível; **não é uma instrução para o Google exibir ou posicionar o site em uma consulta**. A seleção dos resultados é externa e não há garantia de prazo ou posição. O Google informa que um novo rastreamento pode levar dias ou semanas e que pedidos repetidos não aceleram esse processo.
+
+Fontes: [nomes de sites e alternateName](https://developers.google.com/search/docs/appearance/site-names), [Organization](https://developers.google.com/search/docs/appearance/structured-data/organization) e [solicitar novo rastreamento](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl).
 
 ## Referências de implementação
 

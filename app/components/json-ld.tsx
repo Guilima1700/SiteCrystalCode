@@ -23,6 +23,7 @@ export function IdentitySchema() {
             "@type": "Organization",
             "@id": absoluteUrl("/#organization"),
             name: SITE.name,
+            alternateName: SITE.alternateName,
             url: absoluteUrl(),
             description: SITE.description,
             logo: {
@@ -50,6 +51,7 @@ export function IdentitySchema() {
             "@type": "WebSite",
             "@id": absoluteUrl("/#website"),
             name: SITE.name,
+            alternateName: SITE.alternateName,
             url: absoluteUrl(),
             inLanguage: "pt-BR",
             publisher: { "@id": absoluteUrl("/#organization") },

@@ -1,5 +1,6 @@
 export const SITE = {
   name: "CrystalCode",
+  alternateName: "Crystal Code",
   googleAnalyticsId: "G-865FRY6T9R",
   url: "https://crystalcode.com.br",
   description:

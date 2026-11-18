@@ -48,9 +48,9 @@ export default async function InformationPage({
       {page.path === "/sobre" && (
         <>
           <p className="inner-lead">
-            Somos uma equipe de desenvolvimento de software de Aracaju, Sergipe.
-            Unimos design de interface e engenharia para construir sistemas e
-            produtos digitais sob medida.
+            A {SITE.name} ({SITE.alternateName}) é uma equipe de desenvolvimento
+            de software de Aracaju, Sergipe. Unimos design de interface e
+            engenharia para construir sistemas e produtos digitais sob medida.
           </p>
           <section>
             <h2>Software que acompanha a operação</h2>

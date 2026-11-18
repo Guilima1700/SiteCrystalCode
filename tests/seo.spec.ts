@@ -69,6 +69,17 @@ for (const route of PAGES) {
     expect(nodes.find((n) => n["@type"] === "Organization")?.email).toBe(
       SITE.email,
     );
+    for (const type of ["Organization", "WebSite"]) {
+      expect(nodes.find((n) => n["@type"] === type)).toMatchObject({
+        name: "CrystalCode",
+        alternateName: "Crystal Code",
+      });
+    }
+    if (["/", "/sobre"].includes(route.path)) {
+      await expect(page.locator("main")).toContainText(
+        "CrystalCode (Crystal Code)",
+      );
+    }
     expect(nodes.some((n) => n["@type"] === "WebSite")).toBe(true);
     if (route.path !== "/")
       expect(nodes.some((n) => n["@type"] === "BreadcrumbList")).toBe(true);

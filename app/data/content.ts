@@ -154,13 +154,13 @@ export const PAGES = [
     path: "/",
     title: "Desenvolvimento de software sob medida em Aracaju",
     description:
-      "A CrystalCode desenvolve sistemas sob medida, sites profissionais, plataformas web, SaaS e automações. Engenharia de software em Aracaju, Sergipe.",
+      "CrystalCode (Crystal Code): sistemas sob medida, sites profissionais, plataformas web, SaaS e automação. Desenvolvimento de software em Aracaju, Sergipe.",
   },
   {
     path: "/sobre",
     title: "Sobre a CrystalCode",
     description:
-      "Conheça a CrystalCode, equipe de desenvolvimento de software de Aracaju, Sergipe. Design e engenharia para sistemas, plataformas e produtos digitais.",
+      "Conheça a CrystalCode (Crystal Code), equipe de desenvolvimento de software em Aracaju, Sergipe. Design e engenharia para sistemas e produtos digitais.",
   },
   {
     path: "/servicos",
